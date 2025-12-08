@@ -322,3 +322,20 @@ _Assumptions: cardstock/laminate/foil per deck $20–$30; labor baked into cost 
 ### Accessibility & speed
 - Large tap targets, high-contrast text, skip animations toggle, readable field hints.
 - Cache template assets locally; stream only the 78 prompts/results; avoid blocking renders with heavy client-side effects.
+
+### Implementation detail: overlays, cohesion, and non-repetition safeguards
+- **Symbolic overlays:**
+  - Use a deterministic overlay engine seeded by `client_id` to draw geometric sigils (circles, spirals, triangles, glyphs) on a transparent SVG layer above the art; line weights and opacity scale from hash byte values for “resonance frequency.”
+  - Astrology-infused accents: derive coarse Sun/Moon/Rising approximations from birth data (or default to element if time missing) and render faint constellations aligned to card corners.
+- **Palette + frame cohesion:**
+  - Global palette pulled from the client’s first four hash bytes; assign subtle shifts per card (`+/-` hue offsets of 5–12 degrees) so the deck feels unified without looking flat.
+  - Shared frame asset with foil-like border; only inner imagery and sigils change per card.
+- **Uniqueness guarantee algorithm:**
+  - Build a `seen` set keyed by `(arcana, suit, rank)` during mapping; if a collision occurs (e.g., two minors resolve to the same tuple), increment the offending hash byte modulo 256 until an unused combination is found, then persist the adjusted `hash_signature` for traceability.
+  - UI surfacing: “78/78 unique” indicator stays green; if any resolution was needed, a tooltip explains deterministic conflict resolution to keep trust high.
+- **Cross-page continuity cues:**
+  - Persistent header/footer sigil using the truncated hash (`hash_hex[:6]`) rendered as a tiny glyph; appears on all pages and on the pickup screen.
+  - Progress dots use the dominant palette gradient and small constellation sparks to match the tarot frames.
+- **Developer handoff notes:**
+  - Component library: build shared React/Vue components for CardFrame, AuraOverlay, ProgressGrid, and FinishSelector so the Spark cohesion rule is enforced in code.
+  - Motion system: prefer lightweight CSS animations (opacity/pulse) tied to CSS custom properties set from hash values; avoid canvas/WebGL on kiosk hardware.
