@@ -261,3 +261,64 @@ _Assumptions: cardstock/laminate/foil per deck $20–$30; labor baked into cost 
 - Keep layout PDFs for 90 days for instant reprints; log prompt template version.
 - Nightly backup to cloud/storage; test restores weekly.
 - Offline fallback: cache last good prompts; allow reprint from stored PDFs even if AI/API is down.
+
+## Part 7 – Spark UI Blueprint (multi-page, visually rich)
+
+### Spark methodology (adapted for this boutique)
+- **S (Scope & Story):** define the guest journey end-to-end; avoid scope creep by locking core actions (intake, preview, checkout).
+- **P (Page map):** map the minimum page set with clear roles and fast navigation.
+- **A (Aesthetic system):** set a consistent visual kit (gradients, foil-like borders, serif+grotesk pairing, aura overlays).
+- **R (Rhythm & responsiveness):** ensure each step fits the one-hour rhythm; responsive design for tablet/kiosk.
+- **K (Keep cohesion):** enforce shared components (card frame, hash glyphs, buttons) so every page feels like one product.
+
+### Page map (tablet/kiosk-friendly)
+1. **Landing / Welcome**
+   - Quick promise: “Your SHA-256 tarot deck in ~1 hour.”
+   - CTA buttons: “Start My Deck” and “Add Aura Session.”
+   - Visuals: animated aura gradient, subtle sigil grid, sparkles on hover.
+2. **Intake Form**
+   - Fields: name, date of birth, birth time, birth place, intention; optional email for receipts.
+   - Real-time hash preview (short excerpt) to reassure determinism.
+   - Microcopy: consent + data retention note.
+3. **Astro & Resonance Preview**
+   - Displays derived elements: dominant element, color palette swatches, symbolic overlay suggestions.
+   - Esoteric overlay preview: faint glyphs/sigils animated over a blank card frame to show “resonance frequency.”
+4. **Deck Preview Queue**
+   - Shows generation progress (78 slots; locks uniqueness via deterministic mapping, highlights no-duplicate guarantee).
+   - Allows style choice toggles (e.g., “vintage occult,” “film aura,” “etching + glow”) without breaking mapping.
+5. **Aura Capture (optional path)**
+   - Camera live view + pose guidance; after capture, overlay aura gradients; option to set as card back or significator.
+6. **Layout & Finish Selector**
+   - Pick finishes: matte/soft-touch, foil accent, crystal charm, corner rounding.
+   - Shows per-option time impact (keep under 60 minutes) and price delta.
+7. **Checkout & Status**
+   - Summary: 78 unique cards, finish options, aura add-ons, guidebook toggle.
+   - Live status tracker: Render → Layout → Print → Cut → Finish.
+8. **Pickup Screen**
+   - While waiting: shows animated tarot spreads with user palette; QR to share on socials; ETA countdown.
+
+### Aesthetic system
+- **Color:** night-indigo base with moon-silver text, ember-gold highlights; aura gradients (violet→teal, amber→rose) for overlays.
+- **Typography:** display serif for headings (astrologer vibe), rounded grotesk for body/inputs (friendly, legible on kiosk).
+- **Components:**
+  - Card frame with foil-like border, central sigil slot, aura glow layer.
+  - Buttons with halo hover, subtle grain texture background.
+  - Progress chips for 78-card generation; each chip shows card ID when ready.
+- **Imagery:** soft-grain film, etched linework + glow; animated sigil sprites seeded by hash.
+
+### Interaction details (esoteric overlays + cohesion)
+- **Hash overlays:** use truncated hash bytes to drive subtle line glyphs; same seed on all pages for cohesion.
+- **Astrological data:** derive sun/moon/rising approximations (coarse, if time input present) to tint palette and overlay constellations.
+- **Resonance frequency:** map hash value ranges to animation speeds/opacity for aura glows; keeps visual link to “your code.”
+- **Uniqueness enforcement:** generation script locks suits/ranks per 56 minors and 22 majors; UI shows “78/78 unique” badge.
+- **Cohesive deck feel:** reuse the same palette and border frame across previews; only motifs and tones shift per card.
+
+### Multi-page data flow (UI to print)
+1. Intake form submits JSON → hash generation → deck JSON (cards + palettes + sigils + astro overlays).
+2. Deck JSON feeds both: (a) AI prompt batch, (b) UI previews (placeholder frames + palette + glyphs).
+3. After images render, UI updates chips and hands off assets to layout engine (9-up) with shared frame template.
+4. Finishes selected on the layout page annotate the print job ticket; printer queue references the same `client_id` folder.
+
+### Accessibility & speed
+- Large tap targets, high-contrast text, skip animations toggle, readable field hints.
+- Cache template assets locally; stream only the 78 prompts/results; avoid blocking renders with heavy client-side effects.
